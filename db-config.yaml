@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app-pod
+spec:
+  containers:
+    - name: my-app-container
+      image: nginx
+      envFrom:
+        - configMapRef:
+            name: db-config  # Menggunakan ConfigMap sebagai environment variable
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config  # Mount ConfigMap sebagai file di dalam container
+  volumes:
+    - name: config-volume
+      configMap:
+        name: db-config  # Menggunakan ConfigMap sebagai volume
