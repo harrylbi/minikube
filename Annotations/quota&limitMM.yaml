@@ -1,0 +1,46 @@
+# ResourceQuota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-resources
+  namespace: myspace
+spec:
+  hard:
+    requests.cpu: "1"         # Total CPU request yang dapat diminta (1 CPU core)
+    requests.memory: 1Gi      # Total memory request (1 GiB)
+    limits.cpu: "2"           # Batas maksimum CPU yang dapat digunakan (2 CPU core)
+    limits.memory: 2Gi        # Batas maksimum memory yang dapat digunakan (2 GiB)
+    requests.nvidia.com/gpu: 4  # Batas maksimum GPU yang dapat diminta
+
+# Object Count Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: object-counts
+  namespace: myspace
+spec:
+  hard:
+    configmaps: "10"                   # Maksimum 10 ConfigMaps
+    persistentvolumeclaims: "4"        # Maksimum 4 PVCs
+    pods: "4"                          # Maksimum 4 Pods
+    secrets: "10"                      # Maksimum 10 Secrets
+    services: "10"                     # Maksimum 10 Services
+    services.loadbalancers: "2"        # Maksimum 2 LoadBalancer Services
+
+# limit ranges 
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-constraint-per-container
+  namespace: myspace
+spec:
+  limits:
+  - default:             # Batas default yang diterapkan
+      cpu: 500m          # Limit CPU default sebesar 500 milicore
+    defaultRequest:      # Request CPU default sebesar 500 milicore
+      cpu: 500m
+    max:                 # Batas maksimum CPU untuk Container sebesar 1 core
+      cpu: "1"
+    min:                 # Batas minimum CPU untuk Container sebesar 100 milicore
+      cpu: 100m
+    type: Container
